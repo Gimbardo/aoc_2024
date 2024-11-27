@@ -4,3 +4,7 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+
+[[bin]]
+name = "day0"
+path = "src/day0/main.rs"
