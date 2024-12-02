@@ -11,7 +11,7 @@ fn problem1(contents: String) -> i32 {
   let mut column1 = Vec::new();
   let mut column2 = Vec::new();
   for line in contents.split("\n") {
-    let mut splitted = line.split("   ");
+    let mut splitted = line.split_ascii_whitespace();
     column1.push(splitted.next().unwrap().parse::<i32>().unwrap());
     column2.push(splitted.next().unwrap().parse::<i32>().unwrap());
   }
@@ -31,7 +31,7 @@ fn problem2(contents: String) -> i32 {
   let mut column1 = Vec::new();
   let mut column2 = Vec::new();
   for line in contents.split("\n") {
-    let mut splitted = line.split("   ");
+    let mut splitted = line.split_ascii_whitespace();
     column1.push(splitted.next().unwrap().parse::<i32>().unwrap());
     column2.push(splitted.next().unwrap().parse::<i32>().unwrap());
   }
