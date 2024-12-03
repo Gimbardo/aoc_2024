@@ -3,4 +3,5 @@ services:
     image: "rust:latest"
     volumes:
       - .:/app
+      - ./output:/usr/local/cargo/registry/src
     working_dir: /app
