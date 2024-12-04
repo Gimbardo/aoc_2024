@@ -1,18 +1,26 @@
-use std::{collections::HashMap, hash::Hash};
+use std::collections::HashMap;
 
 fn main() {
   let contents = include_str!("input.txt");
-  print!("{}\n", problem1(contents.to_string()));
-  //print!("{}\n", problem2(contents.to_string()));
+  //print!("{}\n", problem1(contents.to_string()));
+  print!("{}\n", problem2(contents.to_string()));
 }
 
 fn problem1(contents: String) -> u32 {
   let line_len: usize = contents.split("\n").next().unwrap().len()+2;
   let formatted_content: Vec<Vec<char>> = surround_content(contents, line_len);
-  let x_indexes: Vec<HashMap<String, usize>> = find_x_indexes(formatted_content.clone());
+  let x_indexes: Vec<HashMap<String, usize>> = find_char_indexes(formatted_content.clone(), "X".chars().next().unwrap());
   let directions_hash: Vec<HashMap<String, i32>> = calculate_directions(formatted_content.clone(), x_indexes);
   let count = count_xmas(formatted_content, directions_hash);
   return count;
+}
+
+fn problem2(contents: String) -> u32 {
+  let line_len: usize = contents.split("\n").next().unwrap().len()+2;
+  let formatted_content: Vec<Vec<char>> = surround_content(contents, line_len);
+  let m_indexes: Vec<HashMap<String, usize>> = find_char_indexes(formatted_content.clone(), "A".chars().next().unwrap());
+  let x_shapes_count = count_x_shapes(formatted_content.clone(), m_indexes);
+  return x_shapes_count;
 }
 
 fn surround_content(contents: String, line_len: usize) -> Vec<Vec<char>> {
@@ -28,13 +36,13 @@ fn surround_content(contents: String, line_len: usize) -> Vec<Vec<char>> {
   return final_content;
 }
 
-fn find_x_indexes(contents: Vec<Vec<char>>) -> Vec<HashMap<String, usize>> {
+fn find_char_indexes(contents: Vec<Vec<char>>, to_find: char) -> Vec<HashMap<String, usize>> {
 
   let mut result: Vec<HashMap<String, usize>> = Vec::new();
   
   for (y, row) in contents.iter().enumerate() {
     for (x, character) in row.iter().enumerate() {
-      if *character=="X".chars().next().unwrap() {
+      if *character==to_find {
         
         result.push(HashMap::from([
           ("x".into(), x),
@@ -102,4 +110,24 @@ fn count_xmas(contents: Vec<Vec<char>>, directions_hash: Vec<HashMap<String, i32
   }
 
   return count;
+}
+
+fn count_x_shapes(contents: Vec<Vec<char>>, m_indexes: Vec<HashMap<String, usize>>) -> u32 {
+    let mut count = 0;
+    for m_index in m_indexes.iter() {
+      let m_x = *m_index.get("x").unwrap() as u32;
+      let m_y = *m_index.get("y").unwrap() as u32;
+      let x_shape_values = vec! [
+        contents[(m_y + 1) as usize][(m_x + 1) as usize],
+        contents[(m_y - 1) as usize][(m_x + 1) as usize],
+        contents[(m_y + 1) as usize][(m_x - 1) as usize],
+        contents[(m_y - 1) as usize][(m_x - 1) as usize],
+      ];
+      let m_count = x_shape_values.iter().filter(|el| **el == "M".chars().next().unwrap()).count();
+      let s_count = x_shape_values.iter().filter(|el| **el == "S".chars().next().unwrap()).count();
+      if m_count == 2 && s_count == 2 && (x_shape_values[0] != x_shape_values[3]) {
+        count +=1;
+      }
+    }
+    return count;
 }
