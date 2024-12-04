@@ -40,15 +40,9 @@ from content to => array of indexes
 
 ## Search for x's with an m after, and define direction(s)
 
-from content and array => array_directions [{ x_x: int, x_y: int, m_x: int, m_y: int, direction: int }, {...}]
+from content and array => array_directions [{ m_x: int, m_y: int, direction_x: int, direction_y: int }, {...}]
 
 directions map:
-
-```
-012
-3X4
-567
-```
 
 [
   {x: -1, y: -1},

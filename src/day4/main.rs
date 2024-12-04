@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 fn main() {
   let contents = include_str!("input.txt");
-  //print!("{}\n", problem1(contents.to_string()));
+  print!("{}\n", problem1(contents.to_string()));
   print!("{}\n", problem2(contents.to_string()));
 }
 
