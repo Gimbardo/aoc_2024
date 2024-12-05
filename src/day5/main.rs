@@ -1,6 +1,4 @@
 use std::collections::HashMap;
-use rand::thread_rng;
-use rand::seq::SliceRandom;
 
 fn main() {
   let contents = include_str!("input.txt");
@@ -9,7 +7,7 @@ fn main() {
   let mut updates: Vec<Vec<u32>> = vec![];
   (rules, updates) = setup_data(contents.to_string());
 
-  //print!("{}\n", problem1(&rules, &updates));
+  print!("{}\n", problem1(&rules, &updates));
   print!("{}\n", problem2(&rules, &updates));
 }
 
@@ -29,7 +27,6 @@ fn problem2(rules: &HashMap<u32, Vec<u32>>, updates: &Vec<Vec<u32>>) -> u32 {
         if is_line_good(&line, &rules){
             return 0;
         } else {
-            // FIND A BETTER AND NICEST WAY
             let line_ordered: Vec<u32> = order_line(line.clone(), &rules);
             return middle_of_line(&line_ordered);
         }
