@@ -69,7 +69,7 @@ fn calculate_directions(contents: Vec<Vec<char>>, x_indexes: Vec<HashMap<String,
   for x_from_xmas in x_indexes.iter() {
     let y_index = *x_from_xmas.get("y").unwrap();
     let x_index = *x_from_xmas.get("x").unwrap();
-    for (direction, direction_coords) in directions_maps.iter().enumerate() {
+    for (direction_coords) in directions_maps.iter() {
       let m_y_index = y_index as i32 + *direction_coords.get("y").unwrap();
       let m_x_index = x_index as i32 + *direction_coords.get("x").unwrap();
       if contents[m_y_index as usize][m_x_index as usize] == "M".chars().next().unwrap() {
