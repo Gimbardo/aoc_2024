@@ -3,14 +3,14 @@ use std::{collections::HashMap, hash::Hash, thread, time};
 const GUARD: char = '^';
 const OBSTACLE: char = '#';
 const TILE: char = '.';
-const OUTSIDE: char = '🍃';
-const FIRE_EMOJII: char = '🔥';
+const OUTSIDE: char = '~';
+const FIRE_EMOJII: char = 'x';
 
 fn main() {
   let contents = include_str!("input.txt");
   let mut guard_starting_pos: HashMap<char, usize> = HashMap::new();
 
-  let vec_contents: Vec<Vec<char>> = surround_content(contents.to_string(), contents.split("\n").next().unwrap().len()+2);
+  let vec_contents: Vec<Vec<char>> = surround_content(contents.to_string(), contents.lines().next().unwrap().len()+2);
 
   contents.lines().enumerate().for_each( |(y, line)| {
     let line: Vec<char> = line.chars().collect::<Vec<char>>();
@@ -59,6 +59,8 @@ fn problem1_and_2(mut map: Vec<Vec<char>>, mut guard_current_pos: HashMap<char, 
         ('y', 0)]
     ));
 
+    let mut original_map = map.clone();
+
     let mut possible_path: Vec<HashMap<char, usize>> = vec![];
     for direction in directions_maps.clone().iter().cycle() {
         let mut new_count: u32 = 0;
@@ -68,16 +70,13 @@ fn problem1_and_2(mut map: Vec<Vec<char>>, mut guard_current_pos: HashMap<char, 
           break
         }
     }
-    let mut unique_steps_count: u32 = 0;
-    map.iter().for_each(|line| {
-      unique_steps_count += (line.iter().filter(|n| **n == FIRE_EMOJII).count() as u32);
-    });
+    let mut unique_steps_count: u32 = (possible_path.iter().len()) as u32;
 
     let mut obstacle_loop_count: u32 = 0;
 
-    for possible_obstacle_coord in possible_path {
-      print!("valutando ostacolo in posizone {}, {}\n", possible_obstacle_coord.get(&'y').unwrap(), possible_obstacle_coord.get(&'x').unwrap());
-      let mut new_map: Vec<Vec<char>> = map.clone();
+    for (num, possible_obstacle_coord) in possible_path.iter().enumerate() {
+      print!("valutando ostacolo in posizione {}, {}: {}/{}\n", possible_obstacle_coord.get(&'y').unwrap(), possible_obstacle_coord.get(&'x').unwrap(), num+1, possible_path.len());
+      let mut new_map: Vec<Vec<char>> = original_map.clone();
       new_map[*possible_obstacle_coord.get(&'y').unwrap()][*possible_obstacle_coord.get(&'x').unwrap()] = OBSTACLE;
       if contains_a_loop(new_map, guard_starting_pos.clone(), directions_maps.clone()) {
         print!("loop in posizione {}, {}\n\n", possible_obstacle_coord.get(&'y').unwrap(), possible_obstacle_coord.get(&'x').unwrap());
@@ -89,22 +88,22 @@ fn problem1_and_2(mut map: Vec<Vec<char>>, mut guard_current_pos: HashMap<char, 
 }
 
 fn proceed_until_obstacle(map: &mut Vec<Vec<char>>, direction: HashMap<char, i32>, guard_position: HashMap<char, usize>, possible_path: &mut Vec<HashMap<char, usize>>) -> (HashMap<char, usize>, bool) {
-  //pretty_print(map);
-  //thread::sleep(time::Duration::from_millis(200));
   let next_pos_coord: HashMap<char, usize> = HashMap::from([
       ('x', ((*guard_position.get(&'x').unwrap() as i32) + direction.get(&'x').unwrap()) as usize),
       ('y', ((*guard_position.get(&'y').unwrap() as i32) + direction.get(&'y').unwrap()) as usize)
   ]);
+  let current_pos =  map[*guard_position.get(&'y').unwrap()][*guard_position.get(&'x').unwrap()];
   let next_pos = map[*next_pos_coord.get(&'y').unwrap()][*next_pos_coord.get(&'x').unwrap()];
   map[*guard_position.get(&'y').unwrap()][*guard_position.get(&'x').unwrap()] = FIRE_EMOJII;
+
+  if current_pos != FIRE_EMOJII {
+    possible_path.push(guard_position.clone());
+  }
   if next_pos == OBSTACLE {
     return (guard_position, false);
   } else if next_pos == OUTSIDE {
     return (guard_position, true);
   } else {
-    if next_pos != FIRE_EMOJII {
-      possible_path.push(guard_position.clone());
-    }
     return proceed_until_obstacle(map, direction, next_pos_coord, possible_path);
   }
 }
@@ -126,6 +125,9 @@ fn contains_a_loop(mut map: Vec<Vec<char>>, mut guard_starting_pos: HashMap<char
 }
 
 fn proceed_until_obstacle_search_loop(map: &mut Vec<Vec<char>>, direction: HashMap<char, i32>, guard_position: HashMap<char, usize>, possible_path: &mut Vec<HashMap<char, usize>>) -> (HashMap<char, usize>, bool, bool) {
+  //pretty_print(&map);
+  //print!("{:#?}", direction);
+  //thread::sleep(time::Duration::from_millis(2000));
   let next_pos_coord: HashMap<char, usize> = HashMap::from([
       ('x', ((*guard_position.get(&'x').unwrap() as i32) + direction.get(&'x').unwrap()) as usize),
       ('y', ((*guard_position.get(&'y').unwrap() as i32) + direction.get(&'y').unwrap()) as usize)
@@ -136,17 +138,15 @@ fn proceed_until_obstacle_search_loop(map: &mut Vec<Vec<char>>, direction: HashM
   let mut guard_position_with_direction = guard_position.clone();
   guard_position_with_direction.insert('d', direction_to_usize(direction.clone()));
 
-  for past_path in possible_path.iter()
-  {
-    if *guard_position.get(&'x').unwrap() == *past_path.get(&'x').unwrap() &&
-       *guard_position.get(&'y').unwrap() == *past_path.get(&'y').unwrap() &&
-       direction_to_usize(direction.clone()) == *past_path.get(&'d').unwrap() {
-        return (guard_position, true, true);
-    }
-  }
-  possible_path.push(guard_position_with_direction);
-
   if next_pos == OBSTACLE {
+    for past_path in possible_path.iter() {
+      if *guard_position.get(&'x').unwrap() == *past_path.get(&'x').unwrap() &&
+        *guard_position.get(&'y').unwrap() == *past_path.get(&'y').unwrap() &&
+        direction_to_usize(direction.clone()) == *past_path.get(&'d').unwrap() {
+          return (guard_position, true, true);
+      }
+    }
+    possible_path.push(guard_position_with_direction);
     return (guard_position, false, false);
   } else if next_pos == OUTSIDE {
     return (guard_position, true, false);
