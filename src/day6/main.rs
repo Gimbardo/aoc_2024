@@ -125,9 +125,6 @@ fn contains_a_loop(mut map: Vec<Vec<char>>, mut guard_starting_pos: HashMap<char
 }
 
 fn proceed_until_obstacle_search_loop(map: &mut Vec<Vec<char>>, direction: HashMap<char, i32>, guard_position: HashMap<char, usize>, possible_path: &mut Vec<HashMap<char, usize>>) -> (HashMap<char, usize>, bool, bool) {
-  //pretty_print(&map);
-  //print!("{:#?}", direction);
-  //thread::sleep(time::Duration::from_millis(2000));
   let next_pos_coord: HashMap<char, usize> = HashMap::from([
       ('x', ((*guard_position.get(&'x').unwrap() as i32) + direction.get(&'x').unwrap()) as usize),
       ('y', ((*guard_position.get(&'y').unwrap() as i32) + direction.get(&'y').unwrap()) as usize)
@@ -167,12 +164,4 @@ fn direction_to_usize(direction: HashMap<char, i32>) -> usize {
   } else {
     return 3; // LEFT
   }
-}
-
-fn pretty_print(fake_map: &Vec<Vec<char>>) {
-  for row in fake_map {
-      let row: String = row.clone().iter().collect();
-      println!("{row}");
-  }
-  println!();
 }
