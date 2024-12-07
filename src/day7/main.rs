@@ -1,0 +1,67 @@
+#[derive(Clone)]
+struct Equation {
+    result: u64,
+    valueses: Vec<u64>,
+    operations: Vec<Operation>
+}
+
+#[derive(Clone)]
+#[derive(Debug)]
+pub enum Operation {
+    Sum,
+    Multiply
+}
+
+fn main() {
+let contents = include_str!("input.txt");
+print!("{}\n", problem1(contents.to_string()));
+//print!("{}\n", problem2(contents.to_string()));
+}
+
+fn problem1(contents: String) -> u64 {
+    let mut count = 0;
+    for line in contents.lines() {
+        print!("evaluating {}\n", line);
+        let split_line: Vec<&str> = line.split(": ").collect::<>();
+        let valueses: Vec<u64> = split_line[1].split(" ").collect::<Vec<&str>>().iter().map(|el| el.parse::<u64>().unwrap()).collect();
+        let eq = Equation {
+            result: split_line[0].parse::<u64>().unwrap(),
+            valueses: valueses.clone(),
+            operations: vec![Operation::Sum;valueses.len()-1]
+        };
+        
+        if is_valid(&mut eq.clone(), 0) {
+            count += eq.result;
+        }
+    }
+    return count;
+}
+
+fn is_valid(equation: &mut Equation, depth: usize) -> bool {
+    if depth >= equation.operations.len() {
+        print!("{:?}\n", equation.operations);
+        return operate(equation) == equation.result;
+    }
+
+    equation.operations[depth] = Operation::Sum;
+    if is_valid(equation,depth + 1) {
+        return true;
+    }
+    equation.operations[depth] = Operation::Multiply;
+    if is_valid(equation,depth + 1) {
+        return true;
+    }
+    return false
+}
+
+fn operate(equation: &mut Equation) -> u64 {
+    let mut result = equation.valueses[0];
+    for (index, operation) in equation.operations.iter().enumerate() {
+        if matches!(operation, Operation::Sum) {
+            result += equation.valueses[index+1];
+        } else if matches!(operation, Operation::Multiply) {
+            result *= equation.valueses[index+1];
+        }
+    }
+    return result;
+}

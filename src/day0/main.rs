@@ -1,8 +1,14 @@
-use std::fs;
 
 fn main() {
-    let contents = fs::read_to_string("./src/day0/input.txt")
-        .expect("Should have been able to read the file");
+  let contents = include_str!("input.txt");
+  print!("{}\n", problem1(contents.to_string()));
+  //print!("{}\n", problem2(contents.to_string()));
+}
 
-    println!("With text:\n{contents}");
+fn problem1(contents: String) -> i32 {
+  let mut count = 0;
+  for line in contents.lines() {
+
+  }
+  return count;
 }
