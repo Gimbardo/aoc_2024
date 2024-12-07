@@ -9,13 +9,13 @@ struct Equation {
 #[derive(Debug)]
 pub enum Operation {
     Sum,
-    Multiply
+    Multiply,
+    Concatenation
 }
 
 fn main() {
 let contents = include_str!("input.txt");
 print!("{}\n", problem1(contents.to_string()));
-//print!("{}\n", problem2(contents.to_string()));
 }
 
 fn problem1(contents: String) -> u64 {
@@ -39,7 +39,6 @@ fn problem1(contents: String) -> u64 {
 
 fn is_valid(equation: &mut Equation, depth: usize) -> bool {
     if depth >= equation.operations.len() {
-        print!("{:?}\n", equation.operations);
         return operate(equation) == equation.result;
     }
 
@@ -48,6 +47,10 @@ fn is_valid(equation: &mut Equation, depth: usize) -> bool {
         return true;
     }
     equation.operations[depth] = Operation::Multiply;
+    if is_valid(equation,depth + 1) {
+        return true;
+    }
+    equation.operations[depth] = Operation::Concatenation;
     if is_valid(equation,depth + 1) {
         return true;
     }
@@ -61,6 +64,9 @@ fn operate(equation: &mut Equation) -> u64 {
             result += equation.valueses[index+1];
         } else if matches!(operation, Operation::Multiply) {
             result *= equation.valueses[index+1];
+        } else if matches!(operation, Operation::Concatenation) {
+            let value = equation.valueses[index+1];
+            result = format!("{result}{value}").parse::<u64>().unwrap();
         }
     }
     return result;
