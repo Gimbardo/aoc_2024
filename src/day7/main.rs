@@ -15,10 +15,11 @@ pub enum Operation {
 
 fn main() {
 let contents = include_str!("input.txt");
-print!("{}\n", problem1(contents.to_string()));
+// for problem 1 just remove concatenation from enum and func below
+print!("{}\n", problem2(contents.to_string()));
 }
 
-fn problem1(contents: String) -> u64 {
+fn problem2(contents: String) -> u64 {
     let mut count = 0;
     for line in contents.lines() {
         print!("evaluating {}\n", line);
