@@ -1,4 +1,4 @@
-use std::{collections::HashMap, hash::Hash, thread, time};
+use std::collections::HashMap;
 
 const GUARD: char = '^';
 const OBSTACLE: char = '#';
