@@ -14,6 +14,7 @@ fn problem(contents: String) -> u64 {
     for x in 0..line.len() {
       if formatted_content[y][x].1 { continue; }
       let fence = fence_cost(&mut formatted_content, (y, x));
+      //print!("{} => {} * {}\n", formatted_content[y][x].0, fence.0, fence.1 );
       val += fence.0 as u64 * fence.1 as u64;
     }
   }
@@ -41,6 +42,7 @@ fn fence_cost(farm: &mut Vec<Vec<(char, bool)>>, coords: (usize, usize)) -> (usi
 
   let line = &farm.clone()[coords.0];
 
+  // LEFT
   if coords.1 != 0 && let Some(left_elem) = line.get(coords.1 - 1) {
     if left_elem.0 == elem.0 {
       let temp_count = fence_cost(farm, (coords.0, coords.1-1));
@@ -53,6 +55,7 @@ fn fence_cost(farm: &mut Vec<Vec<(char, bool)>>, coords: (usize, usize)) -> (usi
     count.0 += 1
   }
 
+  // RIGHT
   if let Some(right_elem) = line.get(coords.1 + 1) {
     if right_elem.0 == elem.0 {
       let temp_count = fence_cost(farm, (coords.0, coords.1+1));
@@ -65,6 +68,7 @@ fn fence_cost(farm: &mut Vec<Vec<(char, bool)>>, coords: (usize, usize)) -> (usi
     count.0 += 1
   }
 
+  // UP
   if coords.0 != 0 && let Some(upper_line) = farm.get(coords.0 - 1) {
     if upper_line[coords.1].0 == elem.0 {
       let temp_count = fence_cost(farm, (coords.0-1, coords.1));
@@ -77,6 +81,7 @@ fn fence_cost(farm: &mut Vec<Vec<(char, bool)>>, coords: (usize, usize)) -> (usi
     count.0 += 1
   }
 
+  // DOWN
   if let Some(lower_line) = farm.get(coords.0 + 1) {
     if lower_line[coords.1].0 == elem.0 {
       let temp_count = fence_cost(farm, (coords.0+1, coords.1));
