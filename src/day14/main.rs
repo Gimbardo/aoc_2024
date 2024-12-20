@@ -10,7 +10,7 @@ const TALL: i32 = 103;
 
 impl Robot {
   fn new(coords: (usize, usize), speed: (i32, i32)) -> Robot {
-    Robot { coords: coords, speed: speed }
+    Robot { coords, speed }
   }
 
   fn go(&mut self) {
@@ -28,8 +28,8 @@ impl Robot {
 
 fn main() {
   let contents = include_str!("input.txt");
-  print!("{}\n", problem1(contents.to_string()));
-  print!("{}\n", problem2(contents.to_string()));
+  println!("{}", problem1(contents.to_string()));
+  println!("{}", problem2(contents.to_string()));
 }
 
 fn problem1(contents: String) -> usize {
@@ -37,8 +37,8 @@ fn problem1(contents: String) -> usize {
   let mut robots: Vec<Robot> = vec![];
   for line in contents.lines() {
     let mut split = line.split_ascii_whitespace();
-    let coords = calc_coords(split.next().unwrap_or_else(|| ""));
-    let speed = calc_speed(split.next().unwrap_or_else(|| ""));
+    let coords = calc_coords(split.next().unwrap_or(""));
+    let speed = calc_speed(split.next().unwrap_or(""));
     robots.push(Robot::new(coords, speed));
     area[coords.1][coords.0] += 1;
   }
@@ -51,9 +51,9 @@ fn problem1(contents: String) -> usize {
     };
   }
 
-  let mut counters: (usize, usize, usize, usize) = quadrants_counter(&area);
+  let counters: (usize, usize, usize, usize) = quadrants_counter(&area);
 
-  return counters.0 * counters.1 * counters.2 * counters.3;
+  counters.0 * counters.1 * counters.2 * counters.3
 }
 
 fn problem2(contents: String) -> usize {
@@ -61,8 +61,8 @@ fn problem2(contents: String) -> usize {
   let mut robots: Vec<Robot> = vec![];
   for line in contents.lines() {
     let mut split = line.split_ascii_whitespace();
-    let coords = calc_coords(split.next().unwrap_or_else(|| ""));
-    let speed = calc_speed(split.next().unwrap_or_else(|| ""));
+    let coords = calc_coords(split.next().unwrap_or(""));
+    let speed = calc_speed(split.next().unwrap_or(""));
     robots.push(Robot::new(coords, speed));
     area[coords.1][coords.0] += 1;
   }
@@ -82,7 +82,7 @@ fn problem2(contents: String) -> usize {
       //std::io::stdin().read_line(&mut s).expect("Did not enter a correct string");
     }
   }
-  return 0;
+  0
 }
 
 fn contains_segments_of_length(n_segments: usize, length_segment: usize, area: &Vec<Vec<usize>>) -> bool {
@@ -103,7 +103,7 @@ fn contains_segments_of_length(n_segments: usize, length_segment: usize, area: &
       }
     }
   }
-  return false;
+  false
 }
 
 fn calc_coords(data: &str) -> (usize, usize) {
@@ -113,7 +113,7 @@ fn calc_coords(data: &str) -> (usize, usize) {
       return (x.parse::<usize>().unwrap(), y.parse::<usize>().unwrap())
     }
   }
-  return (0, 0)
+  (0, 0)
 }
 
 fn calc_speed(data: &str) -> (i32, i32) {
@@ -122,7 +122,7 @@ fn calc_speed(data: &str) -> (i32, i32) {
       return (x.parse::<i32>().unwrap(), y.parse::<i32>().unwrap())
     }
   }
-  return (0, 0)
+  (0, 0)
 }
 
 fn quadrants_counter(area: &Vec<Vec<usize>>) -> (usize, usize, usize, usize) {
@@ -146,7 +146,7 @@ fn quadrants_counter(area: &Vec<Vec<usize>>) -> (usize, usize, usize, usize) {
       }
     }
   }
-  return counters;
+  counters
 }
 
 fn pretty_print(area: &Vec<Vec<usize>>) {
@@ -155,6 +155,6 @@ fn pretty_print(area: &Vec<Vec<usize>>) {
       let tree_char = if *count != 0 { "🟩" } else { "🟦" };
       print!("{} ", tree_char);
     }
-    print!("\n");
+    println!();
   }
 }

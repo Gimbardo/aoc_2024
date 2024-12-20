@@ -16,13 +16,13 @@ pub enum Operation {
 fn main() {
 let contents = include_str!("input.txt");
 // for problem 1 just remove concatenation from enum and func below
-print!("{}\n", problem2(contents.to_string()));
+println!("{}", problem2(contents.to_string()));
 }
 
 fn problem2(contents: String) -> u64 {
     let mut count = 0;
     for line in contents.lines() {
-        print!("evaluating {}\n", line);
+        println!("evaluating {}", line);
         let split_line: Vec<&str> = line.split(": ").collect::<>();
         let valueses: Vec<u64> = split_line[1].split(" ").collect::<Vec<&str>>().iter().map(|el| el.parse::<u64>().unwrap()).collect();
         let eq = Equation {
@@ -35,7 +35,7 @@ fn problem2(contents: String) -> u64 {
             count += eq.result;
         }
     }
-    return count;
+    count
 }
 
 fn is_valid(equation: &mut Equation, depth: usize) -> bool {
@@ -55,7 +55,7 @@ fn is_valid(equation: &mut Equation, depth: usize) -> bool {
     if is_valid(equation,depth + 1) {
         return true;
     }
-    return false
+    false
 }
 
 fn operate(equation: &mut Equation) -> u64 {
@@ -70,5 +70,5 @@ fn operate(equation: &mut Equation) -> u64 {
             result = format!("{result}{value}").parse::<u64>().unwrap();
         }
     }
-    return result;
+    result
 }

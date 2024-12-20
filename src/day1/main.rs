@@ -3,8 +3,8 @@ use std::fs;
 fn main() {
   let contents = fs::read_to_string("./src/day1/input.txt")
       .expect("Should have been able to read the file");
-  print!("{}\n", problem1(contents.clone()));
-  print!("{}\n", problem2(contents.clone()));
+  println!("{}", problem1(contents.clone()));
+  println!("{}", problem2(contents.clone()));
 }
 
 fn problem1(contents: String) -> i32 {
@@ -24,7 +24,7 @@ fn problem1(contents: String) -> i32 {
     solution += (column1[n] - column2[n]).abs();
   }
 
-  return solution;
+  solution
 }
 
 fn problem2(contents: String) -> i32 {
@@ -42,5 +42,5 @@ fn problem2(contents: String) -> i32 {
     let mult = column2.iter().filter(|&n| *n==*elem ).count();
     solution += elem * mult as i32;
   }
-  return solution;
+  solution
 }

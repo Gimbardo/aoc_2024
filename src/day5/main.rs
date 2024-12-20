@@ -7,32 +7,32 @@ fn main() {
   let mut updates: Vec<Vec<u32>> = vec![];
   (rules, updates) = setup_data(contents.to_string());
 
-  print!("{}\n", problem1(&rules, &updates));
-  print!("{}\n", problem2(&rules, &updates));
+  println!("{}", problem1(&rules, &updates));
+  println!("{}", problem2(&rules, &updates));
 }
 
 fn problem1(rules: &HashMap<u32, Vec<u32>>, updates: &Vec<Vec<u32>>) -> u32 {
     let count: u32 = updates.iter().map(|line| {
-        if is_line_good(&line, &rules){
-            return middle_of_line(&line);
+        if is_line_good(line, rules){
+            middle_of_line(line)
         } else {
-            return 0;
+            0
         }
     }).sum();
-    return count;
+    count
 }
 
 fn problem2(rules: &HashMap<u32, Vec<u32>>, updates: &Vec<Vec<u32>>) -> u32 {
     let count: u32 = updates.iter().map(|line| {
-        if is_line_good(&line, &rules){
-            return 0;
+        if is_line_good(line, rules){
+            0
         } else {
-            let line_ordered: Vec<u32> = order_line(line.clone(), &rules);
-            return middle_of_line(&line_ordered);
+            let line_ordered: Vec<u32> = order_line(line.clone(), rules);
+            middle_of_line(&line_ordered)
         }
     }).sum();
 
-    return count;
+    count
 }
 
 fn setup_data(contents: String) -> (HashMap<u32, Vec<u32>>, Vec<Vec<u32>>) {
@@ -40,19 +40,19 @@ fn setup_data(contents: String) -> (HashMap<u32, Vec<u32>>, Vec<Vec<u32>>) {
     let mut updates: Vec<Vec<u32>> = vec![];
     let mut reached_updates: bool = false;
     for line in contents.lines() {
-        if !reached_updates && line.len() != 0 {
+        if !reached_updates && !line.is_empty() {
             let line_split: Vec<&str> = line.split("|").collect();
             let key = line_split[1].parse::<u32>().unwrap();
             let value = line_split[0].parse::<u32>().unwrap();
-            rules.entry(key).or_insert_with(||vec![]);
+            rules.entry(key).or_default();
             rules.entry(key).and_modify(|rule| rule.push(value));
-        } else if line.len() == 0 {
+        } else if line.is_empty() {
             reached_updates = true;
         } else {
             updates.push(line.split(",").collect::<Vec<_>>().iter().map(|el| el.parse::<u32>().unwrap()).collect());
         }
     }
-    return (rules, updates);
+    (rules, updates)
 }
 
 fn is_line_good(line: &Vec<u32>, rules: &HashMap<u32, Vec<u32>>) -> bool {
@@ -65,11 +65,11 @@ fn is_line_good(line: &Vec<u32>, rules: &HashMap<u32, Vec<u32>>) -> bool {
             &mut rules.get(el).cloned().unwrap_or_else(Vec::new)
         );
     }
-    return true;
+    true
 }
 
 fn middle_of_line(line: &[u32]) -> u32 {
-    return *line.get((line.len()-1)/2).unwrap()
+    *line.get((line.len()-1)/2).unwrap()
 }
 
 fn order_line(mut line: Vec<u32>, rules: &HashMap<u32, Vec<u32>>) -> Vec<u32> {
@@ -88,7 +88,7 @@ fn order_line(mut line: Vec<u32>, rules: &HashMap<u32, Vec<u32>>) -> Vec<u32> {
                 new_line.swap(id, index)
             } else {
 
-                banned_valueses.entry(index).or_insert_with(||vec![]);
+                banned_valueses.entry(index).or_default();
                 banned_valueses.entry(index).and_modify( |ban: &mut Vec<u32>| {
                     if let Some(values) = rules.get(el) {
                         ban.extend(values);
@@ -98,5 +98,5 @@ fn order_line(mut line: Vec<u32>, rules: &HashMap<u32, Vec<u32>>) -> Vec<u32> {
         }
         line = new_line
     }
-    return line;
+    line
 }

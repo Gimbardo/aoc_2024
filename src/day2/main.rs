@@ -2,8 +2,8 @@
 
 fn main() {
   let contents = include_str!("input.txt");
-  print!("{}\n", problem1(contents.to_string()));
-  print!("{}\n", problem2(contents.to_string()));
+  println!("{}", problem1(contents.to_string()));
+  println!("{}", problem2(contents.to_string()));
 }
 
 fn problem1(contents: String) -> i32 {
@@ -14,7 +14,7 @@ fn problem1(contents: String) -> i32 {
             count += 1;
         }
     }
-    return count;
+    count
 }
 
 fn problem2(contents: String) -> i32 {
@@ -25,7 +25,7 @@ fn problem2(contents: String) -> i32 {
             count += 1
         }
     }
-    return count;
+    count
 }
 
 fn is_line_ok(line: Vec<i32>) -> bool {
@@ -36,11 +36,11 @@ fn is_line_ok(line: Vec<i32>) -> bool {
             return true
         }
     }
-    return false
+    false
 }
 
 fn is_incr_or_decr(line: Vec<i32>) -> bool {
-    return line.clone().is_sorted_by(|a, b| a > b) || line.clone().is_sorted_by(|a, b| a < b)
+    line.clone().is_sorted_by(|a, b| a > b) || line.clone().is_sorted_by(|a, b| a < b)
 }
 
 fn elements_differentiate_by(line: Vec<i32>, by: i32) -> bool {
@@ -53,5 +53,5 @@ fn elements_differentiate_by(line: Vec<i32>, by: i32) -> bool {
             return false
         }
     }
-    return true
+    true
 }

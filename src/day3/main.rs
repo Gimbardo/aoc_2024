@@ -2,12 +2,12 @@ use regex::Regex;
 
 fn main() {
   let contents = include_str!("input.txt");
-  print!("{}\n", problem1(contents));
-  print!("{}\n", problem2(contents));
+  println!("{}", problem1(contents));
+  println!("{}", problem2(contents));
 }
 
 fn problem1(contents: &str) -> i32 {
-  return multiply_mul_and_sum(contents);
+  multiply_mul_and_sum(contents)
 }
 
 fn problem2(contents: &str) -> i32 {
@@ -16,7 +16,7 @@ fn problem2(contents: &str) -> i32 {
   for split in arr {
     count += multiply_mul_and_sum(split.split("don't()").next().unwrap())
   }
-  return count;
+  count
 
 }
 
@@ -26,5 +26,5 @@ fn multiply_mul_and_sum(contents: &str) -> i32 {
   for (_, [first, second]) in re.captures_iter(contents).map(|c| c.extract()) {
     count += first.parse::<i32>().unwrap()*second.parse::<i32>().unwrap();
   }
-  return count;
+  count
 }

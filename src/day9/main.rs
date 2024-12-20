@@ -22,7 +22,7 @@ fn main() {
   }
 
   //print!("{}\n", problem1(disk_map_extended.clone()));
-  print!("{}\n", problem2(disk_map_extended.clone()));
+  println!("{}", problem2(disk_map_extended.clone()));
 }
 
 fn problem1(mut disk_map_extended: Vec<i32>) -> u64 {
@@ -41,7 +41,7 @@ fn problem1(mut disk_map_extended: Vec<i32>) -> u64 {
 
   disk_map_extended.retain( |v| *v != -1  );
 
-  print!("calculating result\n");
+  println!("calculating result");
 
   let mut result: u64 = 0;
 
@@ -49,18 +49,18 @@ fn problem1(mut disk_map_extended: Vec<i32>) -> u64 {
     result += (elem * (mult as i32)) as u64;
   }
 
-  return result;
+  result
 }
 
-fn problem2(mut disk_map_extended: Vec<i32>) -> u64{
+fn problem2(disk_map_extended: Vec<i32>) -> u64{
   
   let grouped = group_contingent(&disk_map_extended);
 
   let mut string_format: String = disk_map_extended.iter().map({ |el|
     if *el != -1 {
-      return el.to_string();
+      el.to_string()
     } else {
-      return ".".to_string();
+      ".".to_string()
     }
   }).collect();
 
@@ -71,8 +71,8 @@ fn problem2(mut disk_map_extended: Vec<i32>) -> u64{
 
     if index_to_move < to_move_before.1 { break; }
 
-    let to_replace= std::iter::repeat(".").take(to_move_before.1).collect::<String>();
-    let to_place= std::iter::repeat((to_move_before.0).to_string()).take(to_move_before.1).collect::<String>();
+    let to_replace= ".".repeat(to_move_before.1);
+    let to_place= (to_move_before.0).to_string().repeat(to_move_before.1);
     
     if let Some(id_to_replace) = string_format.find(&to_replace) {
       if id_to_replace-1 > index_to_move { continue; }
@@ -90,7 +90,7 @@ fn problem2(mut disk_map_extended: Vec<i32>) -> u64{
     }
   }
 
-  return count;
+  count
 }
 
 fn calculate_index_string(grouped: Vec<(i32, usize)>, index_limit: usize) -> usize {
@@ -99,7 +99,7 @@ fn calculate_index_string(grouped: Vec<(i32, usize)>, index_limit: usize) -> usi
     if id == index_limit { break; }
     index += el.1;
   }
-  return index
+  index
 }
 
 fn group_contingent(vector: &[i32]) -> Vec<(i32, usize)> {
@@ -121,5 +121,5 @@ fn group_contingent(vector: &[i32]) -> Vec<(i32, usize)> {
     result.push((prev_value, count));
   }
   
-  return result;
+  result
 }

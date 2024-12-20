@@ -24,7 +24,7 @@ fn main() {
     });
   });
   
-  print!("{:#?}\n", problem1_and_2(vec_contents.clone(), guard_starting_pos));
+  println!("{:#?}", problem1_and_2(vec_contents.clone(), guard_starting_pos));
 }
 
 fn surround_content(contents: String, line_len: usize) -> Vec<Vec<char>> {
@@ -36,7 +36,7 @@ fn surround_content(contents: String, line_len: usize) -> Vec<Vec<char>> {
     final_content.push(format!("{OUTSIDE}{line}{OUTSIDE}").chars().collect());
   }
   final_content.push(only_surround_line);
-  return final_content;
+  final_content
 }
 
 fn problem1_and_2(mut map: Vec<Vec<char>>, mut guard_current_pos: HashMap<char, usize>) -> (u32, u32) {
@@ -59,23 +59,23 @@ fn problem1_and_2(mut map: Vec<Vec<char>>, mut guard_current_pos: HashMap<char, 
         ('y', 0)]
     ));
 
-    let mut original_map = map.clone();
+    let original_map = map.clone();
 
     let mut possible_path: Vec<HashMap<char, usize>> = vec![];
     for direction in directions_maps.clone().iter().cycle() {
-        let mut new_count: u32 = 0;
+        let new_count: u32 = 0;
         let mut exit: bool = false;
         (guard_current_pos, exit) = proceed_until_obstacle(&mut map, direction.clone(), guard_current_pos.clone(), &mut possible_path);
         if exit {
           break
         }
     }
-    let mut unique_steps_count: u32 = (possible_path.iter().len()) as u32;
+    let unique_steps_count: u32 = (possible_path.iter().len()) as u32;
 
     let mut obstacle_loop_count: u32 = 0;
 
     for (num, possible_obstacle_coord) in possible_path.iter().enumerate() {
-      print!("valutando ostacolo in posizione {}, {}: {}/{}\n", possible_obstacle_coord.get(&'y').unwrap(), possible_obstacle_coord.get(&'x').unwrap(), num+1, possible_path.len());
+      println!("valutando ostacolo in posizione {}, {}: {}/{}", possible_obstacle_coord.get(&'y').unwrap(), possible_obstacle_coord.get(&'x').unwrap(), num+1, possible_path.len());
       let mut new_map: Vec<Vec<char>> = original_map.clone();
       new_map[*possible_obstacle_coord.get(&'y').unwrap()][*possible_obstacle_coord.get(&'x').unwrap()] = OBSTACLE;
       if contains_a_loop(new_map, guard_starting_pos.clone(), directions_maps.clone()) {
@@ -84,7 +84,7 @@ fn problem1_and_2(mut map: Vec<Vec<char>>, mut guard_current_pos: HashMap<char, 
       }
     }
 
-    return (unique_steps_count, obstacle_loop_count);
+    (unique_steps_count, obstacle_loop_count)
 }
 
 fn proceed_until_obstacle(map: &mut Vec<Vec<char>>, direction: HashMap<char, i32>, guard_position: HashMap<char, usize>, possible_path: &mut Vec<HashMap<char, usize>>) -> (HashMap<char, usize>, bool) {
@@ -100,7 +100,7 @@ fn proceed_until_obstacle(map: &mut Vec<Vec<char>>, direction: HashMap<char, i32
     possible_path.push(guard_position.clone());
   }
   if next_pos == OBSTACLE {
-    return (guard_position, false);
+    (guard_position, false)
   } else if next_pos == OUTSIDE {
     return (guard_position, true);
   } else {
@@ -121,7 +121,7 @@ fn contains_a_loop(mut map: Vec<Vec<char>>, mut guard_starting_pos: HashMap<char
       break;
     }
   }
-  return false;
+  false
 }
 
 fn proceed_until_obstacle_search_loop(map: &mut Vec<Vec<char>>, direction: HashMap<char, i32>, guard_position: HashMap<char, usize>, possible_path: &mut Vec<HashMap<char, usize>>) -> (HashMap<char, usize>, bool, bool) {
@@ -144,7 +144,7 @@ fn proceed_until_obstacle_search_loop(map: &mut Vec<Vec<char>>, direction: HashM
       }
     }
     possible_path.push(guard_position_with_direction);
-    return (guard_position, false, false);
+    (guard_position, false, false)
   } else if next_pos == OUTSIDE {
     return (guard_position, true, false);
   } else {
@@ -155,9 +155,9 @@ fn proceed_until_obstacle_search_loop(map: &mut Vec<Vec<char>>, direction: HashM
 fn direction_to_usize(direction: HashMap<char, i32>) -> usize {
   if *direction.get(&'x').unwrap() == 0 {
     if *direction.get(&'y').unwrap() == 1 {
-      return 0; // DOWN
+      0// DOWN
     } else {
-      return 1; // UP
+      1// UP
     }
   } else if *direction.get(&'x').unwrap() == 1 {
     return 2; // RIGHT

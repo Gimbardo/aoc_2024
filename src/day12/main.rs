@@ -2,7 +2,7 @@
 
 fn main() {
   let contents = include_str!("input.txt");
-  print!("{}\n", problem(contents.to_string()));
+  println!("{}", problem(contents.to_string()));
 }
 
 fn problem(contents: String) -> u64 {
@@ -18,7 +18,7 @@ fn problem(contents: String) -> u64 {
       val += fence.0 as u64 * fence.1 as u64;
     }
   }
-  return val;
+  val
 }
 
 fn vectorize_content(contents: String) -> Vec<Vec<(char, bool)>> {
@@ -27,7 +27,7 @@ fn vectorize_content(contents: String) -> Vec<Vec<(char, bool)>> {
     let line_form: Vec<(char, bool)> = line.chars().collect::<Vec<char>>().iter().map(|el| (*el, false)).collect();
     final_content.push(line_form);
   }
-  return final_content;
+  final_content
 }
 
 fn fence_cost(farm: &mut Vec<Vec<(char, bool)>>, coords: (usize, usize)) -> (usize, usize) {
@@ -94,7 +94,7 @@ fn fence_cost(farm: &mut Vec<Vec<(char, bool)>>, coords: (usize, usize)) -> (usi
     count.0 += 1
   }
 
-  return count;
+  count
 }
 
 
